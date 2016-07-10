@@ -17,6 +17,8 @@ def get_infobox(page):
     balance = 0
     j = 0
     while page[j:j+9].lower() != '{{infobox':
+        if j + 9 == len(page):
+            return ''
         j += 1
     for i in range(j, len(page)):
         if page[i] == '{':

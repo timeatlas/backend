@@ -20,6 +20,7 @@ def get_infobox(page):
         if j + 9 == len(page):
             return ''
         j += 1
+
     for i in range(j, len(page)):
         if page[i] == '{':
             balance += 1

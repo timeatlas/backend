@@ -36,7 +36,7 @@ def get_infobox(page): # Returns (infobox, type)
 
 def has_infobox(page, type):
     box = get_infobox(page)
-    if (box == '') or (box[1] != type):
+    if (box == '') or (box[1].lower() != type.lower()):
         return False
     else:
         return True

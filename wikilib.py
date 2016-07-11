@@ -34,8 +34,13 @@ def get_infobox(page): # Returns (infobox, type)
             break
     return (infobox, infobox_type.strip())
 
-def has_infobox(page):
-    return get_infobox(page) != ''
+def has_infobox(page, type):
+    box = get_infobox(page)
+    if (box == '') or (box[1] != type):
+        return False
+    else:
+        return True
+
 
 def parse_link(template): # returns [Link_Title, Description] or [Link_Title]
     start = template.find('[[')

@@ -74,7 +74,10 @@ def categoryList(name, outFile=sys.stdout, fullPath=False, testF=(lambda _: True
 def main():
 	categoryName = 'Category:' + input('Enter category name: ')
 	fullPath = (input('Display full paths (Y/N)? ').upper() == 'Y')
-	categoryList(categoryName.replace(' ', '_'), fullPath=fullPath)
+	filename = os.path.join('logs', '{}.log'.format(categoryName))
+	f = open(filename, 'w')
+	categoryList(categoryName.replace(' ', '_'), fullPath=fullPath, outFile=f)
+	f.close()
 
 if __name__ == '__main__':
 	main()

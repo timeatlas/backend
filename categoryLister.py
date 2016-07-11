@@ -52,7 +52,6 @@ def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(),
 		if page['title'] not in used:
 			used.add(page['title'])
 			pageTxt = cachingGetPage(page['title'])
-			print(pageTxt)
 			if testF(pageTxt):
 				if fullPath:
 					members.append(tuple(path) + (page['title'],))

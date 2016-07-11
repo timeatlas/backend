@@ -2,6 +2,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import sys
+import os.path
 import json
 
 BASE = 'https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmlimit=500&format=json'
@@ -20,6 +21,25 @@ def pagesList(categoryName, cmtype='page'):
 def subcategoriesList(categoryName):
 	return pagesList(categoryName, cmtype='subcat')
 
+def cachingGetPage(pageName):
+	pageName = urllib.parse.urlencode({'': pageName})[1:]
+	filename = os.path.join('pagesCache', '{}.cached'.format(pageName))
+	if os.path.isfile(filename):
+		f = open(filename, encoding='utf-8')
+		res = f.read()
+		f.close()
+		return res
+	else:
+		pageUrl = PAGE_BASE + urllib.parse.urlencode({'': pageName.replace(' ','_')})[1:] + '&action=raw'
+		try:
+			res = urllib.request.urlopen(pageUrl).read().decode('utf-8')
+		except urllib.error.HTTPError:
+			res = ''
+		f = open(filename, 'w', encoding='utf-8')
+		f.write(res)
+		f.close()
+		return res
+
 def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(), path=[], fullPath=False):
 	used.add(categoryName)
 	path = path + [categoryName]
@@ -30,11 +50,7 @@ def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(),
 	for page in memberCandidates:
 		if page['title'] not in used:
 			used.add(page['title'])
-			pageUrl = PAGE_BASE + urllib.parse.urlencode({'':page['title'].replace(' ','_')})[1:] + '&action=raw'
-			try:
-				pageTxt = urllib.request.urlopen(pageUrl).read().decode('utf-8')
-			except urllib.error.HTTPError:
-				pageTxt = ''
+			pageTxt = cachingGetPage(page['title'])
 			if testF(pageTxt):
 				if fullPath:
 					members.append(tuple(path) + (page['title'],))

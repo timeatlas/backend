@@ -17,7 +17,10 @@ def get_infobox(page):
     balance = 0
     j = 0
     while page[j:j+9].lower() != '{{infobox':
+        if j + 9 == len(page):
+            return ''
         j += 1
+
     for i in range(j, len(page)):
         if page[i] == '{':
             balance += 1
@@ -27,6 +30,9 @@ def get_infobox(page):
             infobox = page[j:i+1]
             break
     return infobox
+
+def has_infobox(page):
+    return get_infobox(page) != ''
 
 def parse_link(template): # returns [Link_Title, Description] or [Link_Title]
     start = template.find('[[')

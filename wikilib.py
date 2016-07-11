@@ -12,24 +12,27 @@ def pretty(code):
 def get_first(d):
     return d[list(d.keys())[0]]
 
-def get_infobox(page):
+def get_infobox(page): # Returns (infobox, type)
     infobox = ''
     balance = 0
-    j = 0
-    while page[j:j+9].lower() != '{{infobox':
-        if j + 9 == len(page):
+    start_info = 0
+    while page[start_info:start_info+9].lower() != '{{infobox':
+        if start_info + 9 == len(page):
             return ''
-        j += 1
-
-    for i in range(j, len(page)):
+        start_info += 1
+    finish_tp = start_info + 10
+    while page[finish_tp] != '|':
+        finish_tp += 1
+    infobox_type = page[start_info+10:finish_tp]
+    for i in range(start_info, len(page)):
         if page[i] == '{':
             balance += 1
         elif page[i] == '}':
             balance -= 1
         if balance == 0:
-            infobox = page[j:i+1]
+            infobox = page[start_info:i+1]
             break
-    return infobox
+    return (infobox, infobox_type.strip())
 
 def has_infobox(page):
     return get_infobox(page) != ''

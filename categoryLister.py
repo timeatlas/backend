@@ -1,6 +1,7 @@
 import urllib.request
 import urllib.parse
 import urllib.error
+import wikilib
 import sys
 import os.path
 import json
@@ -22,8 +23,8 @@ def subcategoriesList(categoryName):
 	return pagesList(categoryName, cmtype='subcat')
 
 def cachingGetPage(pageName):
-	pageName = urllib.parse.urlencode({'': pageName})[1:]
-	filename = os.path.join('pagesCache', '{}.cached'.format(pageName))
+	pageFileName = urllib.parse.urlencode({'': pageName})[1:]
+	filename = os.path.join('pagesCache', '{}.cached'.format(pageFileName))
 	if os.path.isfile(filename):
 		f = open(filename, encoding='utf-8')
 		res = f.read()
@@ -51,6 +52,7 @@ def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(),
 		if page['title'] not in used:
 			used.add(page['title'])
 			pageTxt = cachingGetPage(page['title'])
+			print(pageTxt)
 			if testF(pageTxt):
 				if fullPath:
 					members.append(tuple(path) + (page['title'],))
@@ -76,7 +78,8 @@ def main():
 	fullPath = (input('Display full paths (Y/N)? ').upper() == 'Y')
 	filename = os.path.join('logs', '{}.log'.format(categoryName))
 	f = open(filename, 'w')
-	categoryList(categoryName.replace(' ', '_'), fullPath=fullPath, outFile=f)
+	testF = lambda page: wikilib.has_infobox(page, 'military conflict')
+	categoryList(categoryName.replace(' ', '_'), fullPath=fullPath, outFile=f, testF=testF)
 	f.close()
 
 if __name__ == '__main__':

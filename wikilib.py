@@ -17,7 +17,7 @@ def get_infobox(page): # Returns (infobox, type)
     balance = 0
     start_info = 0
     while page[start_info:start_info+9].lower() != '{{infobox':
-        if start_info + 9 == len(page):
+        if start_info + 9 >= len(page):
             return ''
         start_info += 1
     finish_tp = start_info + 10

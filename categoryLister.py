@@ -56,10 +56,10 @@ def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(),
             if testF(pageTxt):
                 if fullPath:
                     members.append(tuple(path) + (page['title'],))
-                    print(members[-1])
+                    print(members[-1], flush=True)
                 else:
                     members.append(page['title'])
-                    print(members[-1])
+                    print(members[-1], flush=True)
     for cat in subcategoriesList(categoryName):
         if cat['title'] not in used:
             print('Going level down to ' + cat['title'], file=sys.stderr)

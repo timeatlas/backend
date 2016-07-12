@@ -70,37 +70,46 @@ def parse_date(template):
              'november': 11, 'nov': 11,
              'december': 12, 'dec': 12}
 
-    t = re.findall(r'(\d+)\s+(january|february|march|april|may|june|july|august|september|october|november|december),\s*(\d+)', template)
+    dashes = r'\u2012\u2013\u2014\u2015'
+    month_regexp = r'january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|nov|dec'
+
+    t = re.search(r'(\d+)\s+(' + month_regexp + r'),\s*(\d+)', template)
     print(t)
     # Date: dd/mm/yyyy
     if t:
-        return ([int(t[0][0]), month[t[0][1]] + 1, int(t[0][2])], [int(t[0][0]), month[t[0][1]] + 1, int(t[0][2])])
+        t = t.groups()
+        return ([int(t[0]), month[t[1]] + 1, int(t[2])], [int(t[0]), month[t[1]] + 1, int(t[2])])
 
-    t = re.findall(r'(january|february|march|april|may|june|july|august|september|oct|november|december)\s+(\d+),\s*(\d+)', template)
+    t = re.search(r'(' + month_regexp + r')\s+(\d+),\s*(\d+)', template)
     print(t)
     if t:
-        return ([int(t[0][1]), month[t[0][0]] + 1, int(t[0][2])], [int(t[0][1]), month[t[0][0]] + 1, int(t[0][2])])
+        t = t.groups()
+        return ([int(t[1]), month[t[0]] + 1, int(t[2])], [int(t[1]), month[t[0]] + 1, int(t[2])])
 
-    t = re.findall(r'(\d+)\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|nov|dec),\s*(\d+)', template)
+    t = re.search(r'(\d+)\s+(' + month_regexp + r'),\s*(\d+)', template)
     print(t)
     # Date: dd/mm/yyyy
     if t:
-        return ([int(t[0][0]), month[t[0][1]] + 1, int(t[0][2])], [int(t[0][0]), month[t[0][1]] + 1, int(t[0][2])])
+        t.groups()
+        return ([int(t[0]), month[t[1]] + 1, int(t[2])], [int(t[0]), month[t[1]] + 1, int(t[2])])
 
-    t = re.findall(r'(jan|feb|mar|apr|may|jun|jul|aug|sep|nov|dec)\s+(\d+),\s*(\d+)', template)
+    t = re.search(r'(' + month_regexp + r')\s+(\d+),\s*(\d+)', template)
     print(t)
     if t:
-        return ([int(t[0][1]), month[t[0][0]] + 1, int(t[0][2])], [int(t[0][1]), month[t[0][0]] + 1, int(t[0][2])])
+        t = t.groups()
+        return ([int(t[1]), month[t[0]] + 1, int(t[2])], [int(t[1]), month[t[0]] + 1, int(t[2])])
 
-    t = re.findall(r'\s*(\d\d\d\d)\s*[\u2012\u2013\u2014\u2015]\s*(\d\d\d\d)\s*', template)
+    t = re.search(r'\s*(\d\d\d\d)\s*[' + dashes + r']\s*(\d\d\d\d)\s*', template)
     print(t)
     if t:
-        return ([1, 1, t[0][0]], [1, 1, t[0][1]])
+        t = t.groups()
+        return ([1, 1, int(t[0])], [1, 1, int(t[1])])
 
-    t = re.findall(r'\s*(\d\d\d\d)\s*[\u2012\u2013\u2014\u2015]\s*(\d\d)\s*', template)
+    t = re.search(r'\s*(\d\d\d\d)\s*[' + dashes + r']\s*(\d\d)\s*', template)
     print(t)
     if t:
-        return ([1, 1, t[0][0]], [1, 1, t[0][0][0:3]+t[0][1]])
+        t = t.groups()
+        return ([1, 1, int(t[0])], [1, 1, int(t[0][0:2]+t[1])])
     # re.match(r'(\d+)\s+(january|february|march|april|may|june|july|august|september|november|december)')
     return result
 

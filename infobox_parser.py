@@ -2,7 +2,7 @@ from wikilib import *
 
 if __name__ == '__main__':
     """input('Введите название страницы:\n'"""
-    page = get_page('en', 'Battle_of_Kulikovo')
+    page = get_page('en', 'Italian_War_of_1521–26')
     js = json.loads(page.decode('UTF-8'), encoding='UTF-8')
     content = get_first(js['query']['pages'])['revisions'][0]['*']
     print(content)

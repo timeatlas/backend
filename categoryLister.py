@@ -41,7 +41,7 @@ def cachingGetPage(pageName):
 		f.close()
 		return res
 
-def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(), path=[], fullPath=False):
+def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(), path=[], fullPath=False, logFile=None):
 	used.add(categoryName)
 	path = path + [categoryName]
 	if lim == 0:
@@ -58,6 +58,7 @@ def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(),
 					print(members[-1])
 				else:
 					members.append(page['title'])
+					print(members[-1])
 	for cat in subcategoriesList(categoryName):
 		if cat['title'] not in used:
 			print('Going level down to ' + cat['title'], file=sys.stderr)
@@ -73,8 +74,10 @@ def categoryList(name, outFile=sys.stdout, fullPath=False, testF=(lambda _: True
 			print(' -> '.join(page), file=outFile)
 
 def main():
-	categoryName = 'Category:' + input('Enter category name: ')
-	fullPath = (input('Display full paths (Y/N)? ').upper() == 'Y')
+	print('Enter category name:', end=' ', file=sys.stderr)
+	categoryName = 'Category:' + input()
+	print('Display full paths? (Y/N)?', end=' ', file=sys.stderr)
+	fullPath = (input().upper() == 'Y')
 	filename = os.path.join('logs', '{}.log'.format(categoryName))
 	f = open(filename, 'w')
 	testF = lambda page: wikilib.has_infobox(page, 'military conflict')

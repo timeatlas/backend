@@ -4,7 +4,7 @@ import subprocess
 
 
 def has_coord(page):
-    process = subprocess.Popen(['perl coorder.pl'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    process = subprocess.Popen(['perl', 'coorder.pl'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     print(process.communicate(input=page.encode('UTF-8')))
     return True
     #return process.communicate(input=page)[0] != ''

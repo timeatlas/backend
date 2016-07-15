@@ -40,7 +40,7 @@ my $wikitext;
 }
 
 
-if ($wikitext =~ /{{coord missing/i) {
+if ($wikitext =~ /\{\{coord missing/i) {
 	exit;
 }
 

@@ -39,6 +39,11 @@ my $wikitext;
 	$wikitext = <>;
 }
 
+
+if ($wikitext =~ /{{coord missing/i) {
+	exit;
+}
+
 my $coords = getTemplate $wikitext;
 my $type = determineType $coords;
 

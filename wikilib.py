@@ -49,7 +49,7 @@ def parse_link(template): # returns [Link_Title, Description] or [Link_Title]
     return template[start+2:finish].split('|')
 
 def parse_date(template):
-    print('date template:', template)
+    #print('date template:', template)
     result = []
     """template = template.lower()
     month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august',
@@ -82,39 +82,39 @@ def parse_date(template):
     month_regexp = r'january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|nov|dec'
 
     t = re.search(r'(\d+)\s+(' + month_regexp + r'),?\s*(\d+)', template)
-    print(t)
+    #print(t)
     # Date: dd/mm/yyyy
     if t:
         t = t.groups()
         return ([int(t[0]), month[t[1]] + 1, int(t[2])], [int(t[0]), month[t[1]] + 1, int(t[2])])
 
     t = re.search(r'(' + month_regexp + r')\s+(\d+),?\s*(\d+)', template)
-    print(t)
+    #print(t)
     if t:
         t = t.groups()
         return ([int(t[1]), month[t[0]] + 1, int(t[2])], [int(t[1]), month[t[0]] + 1, int(t[2])])
 
     t = re.search(r'(\d+)\s+(' + month_regexp + r'),?\s*(\d+)', template)
-    print(t)
+    #print(t)
     # Date: dd/mm/yyyy
     if t:
         t.groups()
         return ([int(t[0]), month[t[1]] + 1, int(t[2])], [int(t[0]), month[t[1]] + 1, int(t[2])])
 
     t = re.search(r'(' + month_regexp + r')\s+(\d+),?\s*(\d+)', template)
-    print(t)
+    #print(t)
     if t:
         t = t.groups()
         return ([int(t[1]), month[t[0]] + 1, int(t[2])], [int(t[1]), month[t[0]] + 1, int(t[2])])
 
     t = re.search(r'\s*(\d\d\d\d)\s*[' + dashes + r']\s*(\d\d\d\d)\s*', template)
-    print(t)
+    #print(t)
     if t:
         t = t.groups()
         return ([1, 1, int(t[0])], [1, 1, int(t[1])])
 
     t = re.search(r'\s*(\d\d\d\d)\s*[' + dashes + r']\s*(\d\d)\s*', template)
-    print(t)
+    #print(t)
     if t:
         t = t.groups()
         return ([1, 1, int(t[0])], [1, 1, int(t[0][0:2]+t[1])])

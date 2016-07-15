@@ -121,6 +121,17 @@ def parse_date(template):
     # re.match(r'(\d+)\s+(january|february|march|april|may|june|july|august|september|november|december)')
     return result
 
+def parse_birth_date_template(template):
+    t = re.search(r'(\d+)\|(\d+)\|(\d+)', template)
+    # print(t)
+    # Date: dd/mm/yyyy
+    if t:
+        t = t.groups()
+        return tuple(map(int, t))
+
+def parse_death_date_template(template):
+    return parse_birth_date_template(template)
+
 def parse_infobox_military_conflict(page):
     result = {}
     page = page.split('\n')

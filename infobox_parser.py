@@ -15,9 +15,7 @@ def get_place():
                 s1 = s1.split('=')
                 if s1[0] == '|place':
                     print(s1[1])
-        except KeyError as e:
-            pass
-        except IndexError as e:
+        except:
             pass
 
 if __name__ == '__main__':

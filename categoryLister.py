@@ -9,6 +9,7 @@ import copy
 
 BASE = 'https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmlimit=500&format=json'
 PAGE_BASE = 'https://en.wikipedia.org/w/index.php?title='
+SUMMARY_BASE='https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles='
 
 def pagesList(categoryName, cmtype='page'):
     req = BASE + '&' + urllib.parse.urlencode({'cmtitle': categoryName, 'cmtype': cmtype})
@@ -37,6 +38,23 @@ def cachingGetPage(pageName):
             res = urllib.request.urlopen(pageUrl).read().decode('utf-8')
         except urllib.error.HTTPError:
             res = ''
+        f = open(filename, 'w', encoding='utf-8')
+        f.write(res)
+        f.close()
+        return res
+
+def cachingGetSummary(pageName):
+    summaryFileName = urllib.parse.urlencode({'': pageName})[1:]
+    filename = os.path.join('summaryCache', '{}.cached'.format(summaryFileName))
+    if os.path.isfile(filename):
+        f = open(filename, encoding='utf-8')
+        res = f.read()
+        f.close()
+        return res
+    else:
+        pageUrl = SUMMARY_BASE + summaryFileName
+        res = urllib.request.urlopen(pageUrl).read().decode('utf-8')
+        res = list(json.loads(res)['query']['pages'].values())[0]['extract']
         f = open(filename, 'w', encoding='utf-8')
         f.write(res)
         f.close()

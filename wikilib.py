@@ -146,17 +146,17 @@ def parse_infobox_military_conflict(page):
         s = s.partition('=')
         if len(s) == 3:
             s = (s[0].strip(), s[2].strip())
-        if s[0] == '|conflict':
+        if regex_ok(r'\|\s*conflict', s[0]):
             result['conflict'] = s[1]
-        elif s[0] == '|partof':
+        elif regex_ok(r'\|\s*partof', s[0]):
             pl = parse_link(s[1])
             if len(pl) == 2:
                 result['partof'] = {'link': pl[0], 'description': pl[1]}
             elif len(pl) == 1:
                 result['partof'] = {'link': pl[0]}
-        elif s[0] == '|date':
+        elif regex_ok(r'\|\s*date', s[0]):
             result['date'] = parse_date(s[1])
-        elif s[0] == '|place':
+        elif regex_ok(r'\|\s*place', s[0]):
             result['place'] = parse_link(s[1])
 
     return result
@@ -176,16 +176,16 @@ def parse_infobox_scientist(page):
         s = s.partition('=')
         if len(s) == 3:
             s = (s[0].strip(), s[2].strip())
-        if regex_ok('\|\s*name', s[0]):
+        if regex_ok(r'\|\s*name', s[0]):
             print(s)
             result['name'] = s[1]
-        elif regex_ok('\|\s*birth_date', s[0]):
+        elif regex_ok(r'\|\s*birth_date', s[0]):
             print(s)
             result['birth_date'] = parse_birth_date_template(s[1])
-        elif regex_ok('\|\s*death_date', s[0]):
+        elif regex_ok(r'\|\s*death_date', s[0]):
             print(s)
             result['death_date'] = parse_death_date_template(s[1])
-        elif regex_ok('\|\s*fields', s[0]):
+        elif regex_ok(r'\|\s*fields', s[0]):
             result['fields'] = parse_list_template(s[1])
 
     return result

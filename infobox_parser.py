@@ -19,7 +19,7 @@ def get_place():
             pass
 
 if __name__ == '__main__':
-    get_place()
+    #get_place()
     """input('Введите название страницы:\n'"""
     #page = get_page('en', 'Italian_War_of_1521–26')
     #js = json.loads(page.decode('UTF-8'), encoding='UTF-8')
@@ -30,4 +30,6 @@ if __name__ == '__main__':
     #print(get_infobox(content))
     #print('#################')
     #print(has_infobox(content, 'military conflict'))
+    page = cachingGetPage('Albert_Einstein')
+    print(parse_infobox_scientist(get_infobox(page)[0]))
 

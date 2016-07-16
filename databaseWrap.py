@@ -21,12 +21,12 @@ class Event(BaseModel):
     name = peewee.TextField()
     url = peewee.TextField()
     description = peewee.TextField()
-    coordId = peewee.ForeignKeyField(Coord)
+    coordId = peewee.ForeignKeyField(Coord, null=True)
     dateStart = peewee.DateField()
     dateEnd = peewee.DateField()
-    partOf = peewee.ForeignKeyField('self', related_name='parts')
+    partOf = peewee.ForeignKeyField('self', related_name='parts', null=True)
 
 
 def createTables():
     db.connect()
-    db.create_tables([Coord, Event, TestModel], safe=True)
+    db.create_tables([Coord, Event], safe=True)

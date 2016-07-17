@@ -2,7 +2,7 @@ from bottle import *
 
 @route('/')
 def root():
-    return "<p> hyak hyak i v production </p>"
+    return str(dict(request.query))
 
 
 if __name__ == '__main__':

@@ -68,10 +68,10 @@ def parse_date(template):
     dashes = r'[\u2012\u2013\u2014\u2015-]'
     month_regexp = r'january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|nov|dec'
 
-    """t = re.search(r'(\d\d)\s*'+dashes+r'\s*(\d\d)\s+(' + , template)
+    t = re.search(r'(\d\d)\s*'+dashes+r'\s*(\d\d)\s+(' + month_regexp + r')\s*,?\s*(\d\d\d\d)', template)
     if t:
         t = t.groups()
-        return ([int(t[1]), month[t[0]], int(t[3])], [int(t[2]), month[t[0]], int(t[3])])"""
+        return ([int(t[0]), month[t[2]], int(t[3])], [int(t[1]), month[t[2]], int(t[3])])
 
     t = re.search(r'(' + month_regexp + r')\s+(\d\d)' + dashes + r'(\d\d),?\s*(\d\d\d\d)', template)
     if t:

@@ -2,7 +2,7 @@ use strict;
 
 sub getTemplate($) {
 	my $wikitext = shift;
-	$wikitext =~ /(\{\{coord.*?\}\})/i;
+	$wikitext =~ /\{\{(coord.*?)\}\}/i;
 	$1;
 }
 

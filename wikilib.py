@@ -49,20 +49,7 @@ def parse_link(template): # returns [Link_Title, Description] or [Link_Title]
     return template[start+2:finish].split('|')
 
 def parse_date(template):
-    #print('date template:', template)
     result = []
-    """template = template.lower()
-    month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august',
-             'september', 'november', 'december']
-    for i in range(len(month)):
-        if month[i] in template:
-            result['month'] = i + 1
-            start = template.find(month[i])
-            while not template[start].isdigit():
-                start += 1
-            finish = start
-            while template[finish].isdigit():
-                finish += 1"""
 
     template = template.lower()
     month = {'january': 1, 'jan': 1,
@@ -132,8 +119,6 @@ def parse_date(template):
 
 def parse_birth_date_template(template):
     t = re.search(r'(\d+)\|(\d+)\|(\d+)', template)
-    # print(t)
-    # Date: dd/mm/yyyy
     if t:
         t = t.groups()
         t = tuple(map(int, t))

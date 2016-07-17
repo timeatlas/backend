@@ -1,15 +1,18 @@
+import datetime
+
+
 def cf(date):
-	year = date.year
-	if year > 7000:
-		year -= 7000
-	else:
-		year -= 7001
-	return (year, date.month, date.day)
+    year = date.year
+    if year > 7000:
+        year -= 7000
+    else:
+        year -= 7001
+    return (year, date.month, date.day)
 
 def ct(date):
-	year = date[0]
-	if year > 0:
-		year += 7000
-	else:
-		year += 7001
-	return datetime.date(year, date[1], date[2])
+    year = date[0]
+    if year > 0:
+        year += 7000
+    else:
+        year += 7001
+    return datetime.date(year, date[1], date[2])

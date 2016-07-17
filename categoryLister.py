@@ -6,6 +6,7 @@ import sys
 import os.path
 import json
 import copy
+import re
 
 BASE = 'https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmlimit=500&format=json'
 PAGE_BASE = 'https://en.wikipedia.org/w/index.php?title='
@@ -38,6 +39,10 @@ def cachingGetPage(pageName):
             res = urllib.request.urlopen(pageUrl).read().decode('utf-8')
         except urllib.error.HTTPError:
             res = ''
+        if res.startswith('#REDIRECT '):
+            realName = re.search(r'#REDIRECT\s\[\[(.*?)\]\]', res)
+            realName = realName.groups()[0]
+            return cachingGetPage(realName)
         f = open(filename, 'w', encoding='utf-8')
         f.write(res)
         f.close()

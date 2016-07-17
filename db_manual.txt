@@ -1,0 +1,31 @@
+Imports:
+from dateConverters import ct, cf
+from databaseWrap import Event, Coord
+
+Convert dates:
+ct((year, date, month)) -> datetime.date(year, date, month) # From normal date to date7000
+cf(datetime.date(year, date, month)) -> (year, date, month) # From date7000 to normal date
+
+Selects:
+Event.select().where(<conditions>)
+E. g. 
+Event.select().where(Event.name == 'Battle of Kulikovo')
+Coord.select().where(Coord.id == 1)
+
+Event fields:
+name = peewee.TextField()
+url = peewee.TextField()
+description = peewee.TextField()
+coordId = peewee.ForeignKeyField(Coord, null=True)
+dateStart = peewee.DateField()
+dateEnd = peewee.DateField()
+partOf = peewee.ForeignKeyField('self', related_name='parts', null=True)
+Use like: Event.select().where(Event.name == 'Battle of Kulikovo' & Event.dateEnd == datetime.date(7016, 1, 1))
+          Event.select().where(<conditions>)[0].dateStart # == datetime.date(...)
+
+Coord fields:
+lat = peewee.DoubleField()
+lng = peewee.DoubleField()
+radius = peewee.DoubleField()
+comment = peewee.TextField()
+Use like: Event.select().where(<conditions>)[0].coordId.lat # == some float

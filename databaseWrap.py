@@ -1,6 +1,5 @@
 import peewee
 import sqlite3
-from date7000 import Date7000
 import datetime
 import sys
 

@@ -14,7 +14,7 @@ def pretty(code):
 def get_first(d):
     return d[list(d.keys())[0]]
 
-def get_infobox(page): # Returns (infobox, type)
+def get_infobox(page): # Returns infobox
     isInfobox = lambda template: wiki_template.parse_template(template)['template_name'].lower().startswith('infobox')
     infoboxes = list(filter(isInfobox, wiki_template.get_templates_on_page(page)))
     if len(infoboxes) == 0:

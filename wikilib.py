@@ -126,27 +126,18 @@ def regex_ok(ex, s):
 
 
 def parse_infobox_military_conflict(page):
-    result = {}
-    page = page.split('\n')
-    for s in page:
-        s = s.partition('=')
-        if len(s) == 3:
-            s = (s[0].strip(), s[2].strip())
-        if regex_ok(r'\|\s*conflict', s[0]):
-            result['conflict'] = s[1]
-        elif regex_ok(r'\|\s*partof', s[0]):
-            pl = parse_link(s[1])
-            if len(pl) == 2:
-                result['partof'] = {'link': pl[0], 'description': pl[1]}
-            elif len(pl) == 1:
-                result['partof'] = {'link': pl[0]}
-        elif regex_ok(r'\|\s*date', s[0]):
-            result['date'] = parse_date(s[1])
-        elif regex_ok(r'\|\s*place', s[0]):
-            result['place'] = parse_link(s[1])
-
+    parsed_template = wiki_template.parse_template(page)['options']
+    result = {
+        'conflict'   : parsed_template['conflict'],
+        'date'       : parse_date(parsed_template['date']),
+        'place'      : parse_link(parsed_template['place']),
+    }
+    pl = parse_link(parsed_template['partof'])
+    if len(pl) == 2:
+        result['partof'] = {'link': pl[0], 'description': pl[1]}
+    elif len(pl) == 1:
+        result['partof'] = {'link': pl[0]}
     return result
-
 
 def parse_list_template(template):
     res = []
@@ -154,24 +145,13 @@ def parse_list_template(template):
         res.append(s[2:len(s)-2])
     return res
 
-
 def parse_infobox_scientist(page):
-    result = {}
-    page = page.split('\n')
-    for s in page:
-        s = s.partition('=')
-        if len(s) == 3:
-            s = (s[0].strip(), s[2].strip())
-        if regex_ok(r'\|\s*name', s[0]):
-            print(s)
-            result['name'] = s[1]
-        elif regex_ok(r'\|\s*birth_date', s[0]):
-            print(s)
-            result['birth_date'] = parse_birth_date_template(s[1])
-        elif regex_ok(r'\|\s*death_date', s[0]):
-            print(s)
-            result['death_date'] = parse_death_date_template(s[1])
-        elif regex_ok(r'\|\s*fields', s[0]):
-            result['fields'] = parse_list_template(s[1])
-
+    # return wiki_template.parse_template(page)['options']
+    parsed_template = wiki_template.parse_template(page)['options']
+    result = {
+        'name'       : parsed_template['name'],
+        'birth_date' : parsed_template['birth_date'],
+        'death_date' : parsed_template['death_date'],
+        'fields'     : parsed_template['fields'],
+    }
     return result

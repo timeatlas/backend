@@ -2,6 +2,7 @@ import requests
 import json
 import pprint
 import re
+import wiki_template
 
 def get_page(lang, page):
     return requests.get('http://'+lang+'.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=' + page.strip()).content
@@ -14,26 +15,12 @@ def get_first(d):
     return d[list(d.keys())[0]]
 
 def get_infobox(page): # Returns (infobox, type)
-    infobox = ''
-    balance = 0
-    start_info = 0
-    while page[start_info:start_info+9].lower() != '{{infobox':
-        if start_info + 9 >= len(page):
-            return ''
-        start_info += 1
-    finish_tp = start_info + 10
-    while page[finish_tp] != '|':
-        finish_tp += 1
-    infobox_type = page[start_info+10:finish_tp]
-    for i in range(start_info, len(page)):
-        if page[i] == '{':
-            balance += 1
-        elif page[i] == '}':
-            balance -= 1
-        if balance == 0:
-            infobox = page[start_info:i+1]
-            break
-    return (infobox, infobox_type.strip())
+    isInfobox = lambda template: wiki_template.parse_template(template)['template_name'].lower().startswith('infobox')
+    infoboxes = list(filter(isInfobox, wiki_template.get_templates_on_page(page)))
+    if len(infoboxes) == 0:
+        return ''
+    infobox = infoboxes[0]
+    return (infobox, wiki_template.parse_template(infobox)['template_name'])
 
 def has_infobox(page, type):
     box = get_infobox(page)

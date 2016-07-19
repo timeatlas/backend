@@ -3,8 +3,8 @@ from dateConverters import ct, cf
 from databaseWrap import Event, Coord
 
 Convert dates:
-ct((year, date, month)) -> datetime.date(year, date, month) # From normal date to date7000
-cf(datetime.date(year, date, month)) -> (year, date, month) # From date7000 to normal date
+ct((year, month, day) -> datetime.date(year, date, month) # From normal date to date7000
+cf(datetime.date(year, month, day)) -> (year, date, month) # From date7000 to normal date
 
 Selects:
 Event.select().where(<conditions>)

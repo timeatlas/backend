@@ -42,6 +42,40 @@ def pack(data, file):
     print(data, file=f)
     f.close()
 
+
+def get_period(date_start, date_end):
+    return {
+        'from_date': {
+            'year': date_start[0],
+            'month': date_start[1],
+            'day': date_start[2],
+            'comment': ''
+        },
+        'to_date': {
+            'year': date_end[0],
+            'month': date_end[1],
+            'day': date_end[2],
+            'comment': ''
+        }
+    }
+
+
+def get_data(title, url, date_start, date_end, lat, lng, place_comment, comment):
+    data = {}
+    data['coord'] = {'lat': lat, 'lng': lng,
+                     'comment': place_comment}
+    data['period'] = get_period(date_start, date_end)
+    data['title'] = title
+    data['comment'] = comment
+    data['url'] = url
+    data['type'] = 'military conflict'
+    data['data'] = {
+        'sides': '',
+        'winners': [''],
+        'result': ''
+    }
+    return data
+
 if __name__ == '__main__':
     for i in range(10):
         pack(json.dumps(get_random_data(), ensure_ascii=False), 'test_'+str(i)+'.json')

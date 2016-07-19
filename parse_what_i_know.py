@@ -11,7 +11,7 @@ def has_coord(page):
 
 def parse(page):
     res = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page)[0])
-    return (res != '') and ('date' in res) and has_coord(page)
+    return (res != '') and ('date' in res)# and has_coord(page)
 
 def main():
     f = open('logs/page_list.txt')

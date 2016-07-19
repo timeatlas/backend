@@ -29,3 +29,9 @@ lng = peewee.DoubleField()
 radius = peewee.DoubleField()
 comment = peewee.TextField()
 Use like: Event.select().where(<conditions>)[0].coordId.lat # == some float
+
+Country fields:
+name = peewee.TextField()
+eventId = peewee.ForeignKeyField(Event, null=True)
+Use like: Country.create(name='Russia', eventId=<event object>)
+          Event.select().join(Country).where(Country.name == 'Russia')

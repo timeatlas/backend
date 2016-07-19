@@ -37,7 +37,7 @@ def main():
             continue
         if 'dim' in list(coordsAns['query']['pages'].values())[0]['coordinates'][0]:
             coordRad = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['dim']
-        infoboxData = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page)[0])
+        infoboxData = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page))
         if 'place' in infoboxData:
             coordComment = infoboxData['place']
         else:

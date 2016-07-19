@@ -10,7 +10,7 @@ def get_place():
         page = lister.cachingGetPage(s)
         #js = json.loads(page.decode('UTF-8'), encoding='UTF-8')
         try:
-            content = wikilib.get_infobox(page)[0].split('\n')
+            content = wikilib.get_infobox(page).split('\n')
             for s1 in content:
                 s1 = s1.split('=')
                 if s1[0] == '|place':

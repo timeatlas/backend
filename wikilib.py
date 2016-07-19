@@ -20,11 +20,11 @@ def get_infobox(page): # Returns (infobox, type)
     if len(infoboxes) == 0:
         return ''
     infobox = infoboxes[0]
-    return (infobox, wiki_template.parse_template(infobox)['template_name'])
+    return infobox
 
-def has_infobox(page, type):
-    box = get_infobox(page)
-    if (box == '') or (box[1].lower() != type.lower()):
+def has_infobox(page, infobox_type):
+    infobox = get_infobox(page)
+    if (infobox == '') or (infobox.lower() != infobox_type.lower()):
         return False
     else:
         return True

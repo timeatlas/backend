@@ -10,7 +10,7 @@ def has_coord(page):
     return get_coord(page) != b''
 
 def parse(page):
-    res = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page)[0])
+    res = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page))
     return (res != '') and ('date' in res)# and has_coord(page)
 
 def main():

@@ -39,6 +39,14 @@ def parse_date(template):
     result = []
 
     template = template.lower()
+    
+    if re.search(r'\d{1,4}\sbc', template):
+        groups = list(map(lambda t: t.groups()[0], re.finditer(r'(\d{1,4})\sbc', template)))
+        years = list(map(int, groups))
+        year_start = max(years)
+        year_end = min(years)
+        return ([1, 1, -year_start], [31, 12, -year_end])
+    
     month = {'january': 1, 'jan': 1,
              'february': 2, 'feb': 2,
              'march': 3,  'mar': 3,

@@ -85,6 +85,7 @@ def recursivePagesList(categoryName, lim=-1, testF=(lambda _: True), used=set(),
                     print(members[-1], flush=True)
     for cat in subcategoriesList(categoryName):
         if cat['title'] not in used:
+            used.add(cat['title'])
             print('Going level down to ' + cat['title'], file=sys.stderr)
             title = cat['title'].replace(' ', '_')
             members += recursivePagesList(title, lim=lim - 1, testF=testF, used=used, path=path, fullPath=fullPath)

@@ -125,18 +125,49 @@ def regex_ok(ex, s):
     return re.search(ex, s) != None
 
 
+def parse_combatant_template(template):
+    #print(template)
+    t = re.search(r'[\[\{](flag|flagcountry|flagicon)\|([\w\s]+)[\|\}\]]', template)
+    if t:
+        t = t.groups()
+        if len(t) > 1:
+            return t[1]
+    t = re.search(r'[\[\{]([\w\s]+)[\|\}\]]', template)
+    if t:
+        t = t.groups()
+        if len(t) > 0:
+            return t[0]
+    return ''
+
+
+def parse_place_template(template):
+    return re.findall(r'\[\[([\w\s]+)\]\]', template)
+
+
 def parse_infobox_military_conflict(page):
     parsed_template = wiki_template.parse_template(page)['options']
-    result = {
-        'conflict'   : parsed_template['conflict'],
-        'date'       : parse_date(parsed_template['date']),
-        'place'      : parse_link(parsed_template['place']),
-    }
-    pl = parse_link(parsed_template['partof'])
-    if len(pl) == 2:
-        result['partof'] = {'link': pl[0], 'description': pl[1]}
-    elif len(pl) == 1:
-        result['partof'] = {'link': pl[0]}
+    result = {}
+    if 'conflict' in parsed_template:
+        result['conflict'] = parsed_template['conflict']
+    if 'date' in parsed_template:
+        result['date'] = parse_date(parsed_template['date'])
+    if 'place' in parsed_template:
+        result['place'] = parse_place_template(parsed_template['place'])
+    if 'partof' in parsed_template:
+        pl = parse_link(parsed_template['partof'])
+        if len(pl) == 2:
+            result['partof'] = {'link': pl[0], 'description': pl[1]}
+        elif len(pl) == 1:
+            result['partof'] = {'link': pl[0]}
+    combatants = []
+
+    for s1 in ['1', '2', '3']:
+        for s2 in ['', 'a', 'b', 'c', 'd']:
+            cmb = 'combatant' + s1 + s2
+            if cmb in parsed_template:
+                combatants.append(parse_combatant_template(parsed_template[cmb]))
+    if len(combatants) > 0:
+        result['combatants'] = combatants
     return result
 
 def parse_list_template(template):

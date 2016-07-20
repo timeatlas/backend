@@ -24,7 +24,8 @@ def get_infobox(page): # Returns infobox
 
 def has_infobox(page, infobox_type):
     infobox = get_infobox(page)
-    if (infobox == '') or (wiki_template.parse_template(infobox)['template_name'].lower() != infobox_type.lower()):
+    actual_infobox_category = wiki_template.parse_template(infobox)['template_name']
+    if (infobox == '') or (re.search(r'infobox\s+' + infobox_type.lower(), actual_infobox_category.lower()) == None):
         return False
     else:
         return True

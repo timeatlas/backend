@@ -141,7 +141,7 @@ def parse_combatant_template(template):
 
 
 def parse_place_template(template):
-    return re.findall(r'\[\[([\w\s]+)\]\]', template)
+    return re.findall(r'\[\[([\w\s]+)\]\]', template) + re.findall(r'\|([\w\s+]+)\]\]', template)
 
 
 def parse_infobox_military_conflict(page):

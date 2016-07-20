@@ -7,13 +7,14 @@ import json
 @route('/')
 # title, url, date_start, date_end, lat, lng, place_comment, comment
 def create_response():
+    response.set_header('Access-Control-Allow-Origin', '*')
     args_lst = dict(request.query)
     year_start = None
     year_end = None
     lst = []
     if 'year' not in args_lst:
         if ('year_to' not in args_lst) or ('year_from' not in args_lst):
-            abort(400, 'Bad request, missing some arguments\n I need: year=1234&type=military_conflict or \n '\
+            abort(400, 'Bad request, missing some arguments\n I need: year=1234 or \n '\
                     'year_from=1234&year_to=1235')
         else:
             year_start = ct((int(args_lst['year_from']), 1, 1))
@@ -25,9 +26,9 @@ def create_response():
     lst = Event.select().where((Event.dateStart >= year_start) & (Event.dateStart <= year_end))
     resp = []
     for ev in lst:
-        resp.append(json.dumps(get_data(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.coordId.lat,
-                                        ev.coordId.lng, ev.coordId.comment, ev.description), ensure_ascii=False))
-    return str(resp)
+        resp.append(get_data(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.coordId.lat,
+                                        ev.coordId.lng, ev.coordId.comment, ev.description))
+    return json.dumps(resp, ensure_ascii=False)
     #return str(dict(request.query))
 
 

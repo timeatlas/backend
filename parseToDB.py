@@ -8,7 +8,6 @@ from dateConverters import ct, cf
 import databaseWrap
 from databaseWrap import Event, Coord, Country
 import datetime
-from apiRequest import cachingAPIRequest
 import urllib.parse
 import json
 
@@ -29,16 +28,11 @@ def main():
         page = categoryLister.cachingGetPage(name)
         url = URL_BASE + name.replace(' ', '_')
         # coordLat, coordLng = map(float, get_coord(page).decode().split())
-        coordsAns = cachingAPIRequest(urllib.parse.urlencode({'action': 'query', 'prop': 'coordinates', 'titles': name, 'format': 'json'}))
-        coordsAns = json.loads(coordsAns)
-        try:
-            coordLat = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['lat']
-            coordLng = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['lon']
-        except Exception as e:
-            print(e)
-            continue
-        if 'dim' in list(coordsAns['query']['pages'].values())[0]['coordinates'][0]:
-            coordRad = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['dim']
+        coords = wikilib.get_page_coord(name)
+        if len(coords) == 3:
+            coordLat, coordLng, coordRad = coords
+        else:
+            coordLat, coordLng, 0. = coords
         infoboxData = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page))
         if 'place' in infoboxData:
             coordComment = infoboxData['place']

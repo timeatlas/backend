@@ -3,6 +3,8 @@ import json
 import pprint
 import re
 import wiki_template
+from apiRequest import cachingAPIRequest
+import urllib.parse
 
 def get_page(lang, page):
     return requests.get('http://'+lang+'.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=' + page.strip()).content
@@ -208,3 +210,33 @@ def parse_infobox_scientist(page):
         'fields'     : parsed_template['fields'],
     }
     return result
+
+def get_page_coord(name, placeInfo=''):
+    coordsAns = cachingAPIRequest(urllib.parse.urlencode({'action': 'query', 'prop': 'coordinates', 'titles': name, 'format': 'json', 'coprop': 'dim'}))
+    coordsAns = json.loads(coordsAns)
+    try:
+        coordLat = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['lat']
+        coordLng = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['lon']
+        if 'dim' in list(coordsAns['query']['pages'].values())[0]['coordinates'][0]:
+            coordRad = int(list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['dim'])
+        else:
+            coordRad = None
+    except Exception as e:
+        coordLat = None
+        coordLng = None
+    if coordLat is not None and coordLng is not None:
+        if coordRad is None:
+            return coordLat, coordLng
+        else:
+            return coordLat, coordLng, coordRad
+    related_coords = []
+    print(placeInfo)
+    for link in re.findall(r'(\[\[.*?\]\])', placeInfo):
+        link_dest = link.split('|')[0].strip('[]')
+        link_coords = get_page_coord(link_dest)
+        if len(link_coords) == 3:
+            return link_coords
+        else:
+            return link_coords[0], link_coords[1], float('inf')
+    nearest = min(related_coords, key=lambda t: t[2], default=None)
+    return nearest

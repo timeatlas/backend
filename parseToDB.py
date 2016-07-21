@@ -6,7 +6,7 @@ import io
 import wikilib
 from dateConverters import ct, cf
 import databaseWrap
-from databaseWrap import Event, Coord
+from databaseWrap import Event, Coord, Country
 import datetime
 from apiRequest import cachingAPIRequest
 import urllib.parse
@@ -23,6 +23,7 @@ def main():
     pagesList = pagesListIO.getvalue().split('\n')
     for name in pagesList:
         if name.strip() == '':
+            print('WTF, empty name?')
             continue
         print('<<{}>>'.format(name))
         page = categoryLister.cachingGetPage(name)
@@ -34,6 +35,7 @@ def main():
             coordLat = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['lat']
             coordLng = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['lon']
         except Exception as e:
+            print(e)
             continue
         if 'dim' in list(coordsAns['query']['pages'].values())[0]['coordinates'][0]:
             coordRad = list(coordsAns['query']['pages'].values())[0]['coordinates'][0]['dim']
@@ -52,7 +54,10 @@ def main():
             dateEnd = datetime.date(1, 1, 1)
         coord = Coord.create(lat=coordLat, lng=coordLng, comment=coordComment, radius=0.)
         description = categoryLister.cachingGetSummary(name)
-        Event.create(name=name, url=url, coordId=coord, dateStart=dateStart, dateEnd=dateEnd, description=description) 
+        event = Event.create(name=name, url=url, coordId=coord, dateStart=dateStart, dateEnd=dateEnd, description=description) 
+        if 'combatants' in infoboxData:
+            for combatant in infoboxData['combatants']:
+                Country.create(name=combatant, eventId=event)
 
 if __name__ == '__main__':
     main()

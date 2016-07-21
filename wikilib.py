@@ -39,7 +39,7 @@ def parse_link(template): # returns [Link_Title, Description] or [Link_Title]
 def parse_date(template):
     result = []
 
-    template = template.lower()
+    template = template.lower().replace('&nbsp;', ' ')
     
     if re.search(r'\d{1,4}\sbc', template):
         groups = list(map(lambda t: t.groups()[0], re.finditer(r'(\d{1,4})\sbc', template)))
@@ -64,6 +64,16 @@ def parse_date(template):
     dashes = r'[\u2012\u2013\u2014\u2015-]'
     month_regexp = r'january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|nov|dec'
 
+    t = re.search(r'(' + month_regexp + r')\s(\d{3,4})\s?' + dashes + r'\s?(' + month_regexp + r')\s(\d{3,4})', template)
+    if t:
+        t = t.groups()
+        return ([1, month[t[0]], int(t[1])], [1, month[t[2]], int(t[3])])
+    
+    t = re.search(r'(' + month_regexp + r')\s(\d{1,2})\s?' + dashes + r'\s?(' + month_regexp + r')\s(\d{1,2}),\s(\d{3,4})', template)
+    if t:
+        t = t.groups()
+        return ([int(t[1]), month[t[0]], int(t[4])], [int(t[3]), month[t[2]], int(t[4])])
+    
     t = re.search(r'(\d\d)\s*'+dashes+r'\s*(\d\d)\s+(' + month_regexp + r')\s*,?\s*(\d{3,4})', template)
     if t:
         t = t.groups()

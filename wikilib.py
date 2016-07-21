@@ -135,8 +135,10 @@ def regex_ok(ex, s):
 
 
 def parse_combatant_template(template):
+    template = template.lower()
     #print(template)
-    t = re.search(r'[\[\{](flag|flagcountry|flagicon)\|([\w\s]+)[\|\}\]]', template)
+    dashes = r'\u2012\u2013\u2014\u2015-'
+    t = re.search(r'[\[\{](flag|flagcountry|flagicon|army|navy)\|([\w\s\(\)'+dashes+r']+)[\|\}\]]', template)
     if t:
         t = t.groups()
         if len(t) > 1:

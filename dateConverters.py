@@ -16,3 +16,10 @@ def ct(date):
     else:
         year += 7001
     return datetime.date(year, date[1], date[2])
+
+def dateCheck(year, month, day):
+    try:
+        datetime.date(abs(year), month, date):
+    except ValueError:
+        return False
+    return True

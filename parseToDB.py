@@ -32,7 +32,8 @@ def main():
         if len(coords) == 3:
             coordLat, coordLng, coordRad = coords
         else:
-            coordLat, coordLng, 0. = coords
+            coordLat, coordLng = coords
+            coordRad = 0.
         infoboxData = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page))
         if 'place' in infoboxData:
             coordComment = infoboxData['place']

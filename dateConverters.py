@@ -19,7 +19,7 @@ def ct(date):
 
 def dateCheck(year, month, day):
     try:
-        datetime.date(abs(year), month, date):
+        datetime.date(abs(year), month, date)):
     except ValueError:
         return False
     return True

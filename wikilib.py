@@ -2,10 +2,41 @@ import requests
 import json
 import pprint
 import re
+import os.path
 import wiki_template
 from apiRequest import cachingAPIRequest
-from categoryLister import cachingGetPage
 import urllib.parse
+
+def cachingGetPage(pageName, followRedirects=True):
+    pageFileName = urllib.parse.urlencode({'': pageName})[1:]
+    filename = os.path.join('pagesCache', '{}.cached'.format(pageFileName))
+    if os.path.isfile(filename):
+        f = open(filename, encoding='utf-8')
+        res = f.read()
+        f.close()
+        return res
+    elif (not followRedirects) and os.path.isfile(os.path.join('pagesCache', 'redirs', '{}.cached'.format(pageFileName))):
+        f = open(os.path.join('pagesCache', 'redirs', '{}.cached'.format(pageFileName)), encoding='utf-8')
+        res = f.read()
+        f.close()
+        return res
+    else:
+        pageUrl = PAGE_BASE + urllib.parse.urlencode({'': pageName.replace(' ','_')})[1:] + '&action=raw'
+        try:
+            res = urllib.request.urlopen(pageUrl).read().decode('utf-8')
+        except urllib.error.HTTPError:
+            res = ''
+        if res.startswith('#REDIRECT '):
+            if followRedirects:
+                realName = re.search(r'#REDIRECT\s\[\[(.*?)\]\]', res)
+                realName = realName.groups()[0]
+                return cachingGetPage(realName)
+            else:
+                filename = os.path.join('pagesCache', 'redirs', '{}.cached'.format(pageFileName))
+        f = open(filename, 'w', encoding='utf-8')
+        f.write(res)
+        f.close()
+        return res
 
 def get_page(lang, page):
     return requests.get('http://'+lang+'.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=' + page.strip()).content

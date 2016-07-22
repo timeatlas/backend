@@ -5,6 +5,7 @@ import re
 import os.path
 import wiki_template
 from apiRequest import cachingAPIRequest
+from categoryLister import cachingGetPage
 import urllib.parse
 
 def cachingGetPage(pageName, followRedirects=True):
@@ -45,8 +46,10 @@ def pretty(code):
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(code)
 
+
 def get_first(d):
     return d[list(d.keys())[0]]
+
 
 def get_infobox(page): # Returns infobox
     isInfobox = lambda template: wiki_template.parse_template(template)['template_name'].lower().startswith('infobox')
@@ -55,6 +58,7 @@ def get_infobox(page): # Returns infobox
         return ''
     infobox = infoboxes[0]
     return infobox
+
 
 def has_infobox(page, infobox_type):
     infobox = get_infobox(page)
@@ -69,6 +73,7 @@ def parse_link(template): # returns [Link_Title, Description] or [Link_Title]
     start = template.find('[[')
     finish = template.find(']]')
     return template[start+2:finish].split('|')
+
 
 def parse_date(template):
     result = []

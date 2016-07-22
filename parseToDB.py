@@ -21,20 +21,21 @@ def main():
         parse_what_i_know.main()
     pagesList = pagesListIO.getvalue().split('\n')
     for name in pagesList:
+        page = categoryLister.cachingGetPage(name)
+        infoboxData = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page))
         if name.strip() == '':
-            print('WTF, empty name?')
             continue
         print('<<{}>>'.format(name))
-        page = categoryLister.cachingGetPage(name)
         url = URL_BASE + name.replace(' ', '_')
         # coordLat, coordLng = map(float, get_coord(page).decode().split())
-        coords = wikilib.get_page_coord(name)
+        coords = wikilib.get_page_coord(name, infoboxData['place_raw'])
+        if coords is None:
+            continue
         if len(coords) == 3:
             coordLat, coordLng, coordRad = coords
         else:
             coordLat, coordLng = coords
             coordRad = 0.
-        infoboxData = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page))
         if 'place' in infoboxData:
             coordComment = infoboxData['place']
         else:

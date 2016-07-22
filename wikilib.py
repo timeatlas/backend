@@ -241,10 +241,12 @@ def get_page_coord(name, placeInfo=''):
         else:
             return coordLat, coordLng, coordRad
     related_coords = []
-    print(placeInfo)
+    # print(placeInfo)
     for link in re.findall(r'(\[\[.*?\]\])', placeInfo):
         link_dest = link.split('|')[0].strip('[]')
         link_coords = get_page_coord(link_dest)
+        if link_coords is None:
+            continue
         if len(link_coords) == 3:
             return link_coords
         else:

@@ -4,6 +4,7 @@ import pprint
 import re
 import wiki_template
 from apiRequest import cachingAPIRequest
+from categoryLister import cachingGetPage
 import urllib.parse
 
 def get_page(lang, page):
@@ -150,24 +151,32 @@ def parse_combatant_template(template):
     template = template.lower()
     #print(template)
     dashes = r'\u2012\u2013\u2014\u2015-'
+    result = ''
     t = re.search(r'[\{](flag|flagcountry|flagicon|flag icon|flagu|army|navy|plainlist)\|([\w\s\(\),'+dashes+r']+)[\|\}]', template)
     if t:
         t = t.groups()
         if len(t) > 1:
-            return t[1]
+            result = t[1]
+
     t = re.findall(r'\[([\w\s\(\),\|'+dashes+r']+)\]', template)
     for s in t:
         #print(s)
         if 'file:' not in s:
-            t2 = re.search(r'\|([\w\s\(\),'+dashes+r']+)', s)
+            t2 = re.search(r'([\w\s\(\),'+dashes+r']+)\|', s)
             if t2:
                 t2 = t2.groups()
-                return t2[0]
+                result = t2[0]
             else:
-                return s
-
-    #print(t)
-    return ''
+                result = s
+    page = cachingGetPage(result, followRedirects=False).lower()
+    #print('REDIRECT PAGE:')
+    #print(page)
+    t = re.search(r'#redirect\s+\[\[([\w\s\(\),'+dashes+r']+)\]\]', page)
+    if t:
+        t = t.groups()
+        if len(t) > 0:
+            result = t[0]
+    return result
 
 
 def parse_place_template(template):

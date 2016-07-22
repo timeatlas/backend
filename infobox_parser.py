@@ -21,7 +21,7 @@ def get_place():
 if __name__ == '__main__':
     #get_place()
     """input('Введите название страницы:\n'"""
-    page = get_page('en', 'Italian_War_of_1521–26')
+    page = get_page('en', 'Battle_of_Lake_Khasan')
     js = json.loads(page.decode('UTF-8'), encoding='UTF-8')
     content = get_infobox(get_first(js['query']['pages'])['revisions'][0]['*'])
     print(wiki_template.parse_template(content)['options'])
@@ -30,7 +30,8 @@ if __name__ == '__main__':
     #print(get_infobox(content))
     #print('#################')
     #print(has_infobox(content, 'military conflict'))
-    #page = cachingGetPage('Albert_Einstein')
+    #page = cachingGetPage('usa', followRedirects=False)
+    #print(page)
     #print(parse_infobox_scientist(get_infobox(page)))
 
 

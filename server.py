@@ -7,7 +7,19 @@ import json
 
 @route('/favicon.ico')
 def get_favicon():
-    return static_file('static/favicon.ico', root='/static')
+    return static_file('favicon.ico', root='./static')
+
+@route('/static/<filepath:path>')
+def serve_static(filepath):
+    return static_file(filepath, root='./static')
+
+@error(404)
+def error404(error):
+    return static_file('404.html', root='./static')
+
+@error(403)
+def error403(error):
+    return static_file('403.html', root='./static')
 
 @route('/countries')
 # title, url, date_start, date_end, lat, lng, place_comment, comment
@@ -26,7 +38,22 @@ def create_response():
         lst = Country.select()
     for country in lst:
         resp.append(country.name)
-    resp = list(set(resp))
+    result = {}
+    for el in resp:
+        if not el in result:
+            result[el] = 0
+        result[el] += 1
+    result = result.items()
+    t = []
+    for tup in result:
+        t.append((tup[1], tup[0]))
+    result = list(reversed(sorted(t)))
+    if 'counter' not in args_lst:
+        resp = []
+        for el in result:
+            resp.append(el[1])
+    else:
+        resp = result
     return json.dumps(resp, ensure_ascii=False)
 
 @route('/')
@@ -41,8 +68,9 @@ def create_response():
         args_lst[key] = value.strip()
     if 'year' not in args_lst:
         if ('year_to' not in args_lst) or ('year_from' not in args_lst):
-            abort(400, 'Bad request, missing some arguments\n I need: year=1234 or \n '\
-                    'year_from=1234&year_to=1235')
+            return static_file('403.html', root='./static')
+            # abort(400, 'Bad request, missing some arguments\n I need: year=1234 or \n '\
+            #        'year_from=1234&year_to=1235')
         else:
             year_start = ct((int(args_lst['year_from']), 1, 1))
             year_end = ct((int(args_lst['year_to']), 12, 31))

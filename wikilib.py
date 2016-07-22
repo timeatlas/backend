@@ -150,16 +150,23 @@ def parse_combatant_template(template):
     template = template.lower()
     #print(template)
     dashes = r'\u2012\u2013\u2014\u2015-'
-    t = re.search(r'[\[\{](flag|flagcountry|flagicon|flag icon|flagu|army|navy)\|([\w\s\(\),'+dashes+r']+)[\|\}\]]', template)
+    t = re.search(r'[\{](flag|flagcountry|flagicon|flag icon|flagu|army|navy)\|([\w\s\(\),'+dashes+r']+)[\|\}]', template)
     if t:
         t = t.groups()
         if len(t) > 1:
             return t[1]
-    t = re.search(r'[\[\{]([\w\s(\),'+dashes+r']+)[\|\}\]]', template)
-    if t:
-        t = t.groups()
-        if len(t) > 0:
-            return t[0]
+    t = re.findall(r'\[([\w\s\(\),\|'+dashes+r']+)\]', template)
+    for s in t:
+        print(s)
+        if 'file:' not in s:
+            t2 = re.search(r'\|([\w\s\(\),'+dashes+r']+)', s)
+            if t2:
+                t2 = t2.groups()
+                return t2[0]
+            else:
+                return s
+
+    print(t)
     return ''
 
 
@@ -176,7 +183,9 @@ def parse_infobox_military_conflict(page):
     if 'date' in parsed_template:
         result['date'] = parse_date(parsed_template['date'])
     if 'place' in parsed_template:
-        result['place'] = ', '.join(parse_place_template(parsed_template['place']))
+        t = parse_place_template(parsed_template['place'])
+        result['place'] = ', '.join(t)
+        result['place_raw'] = t
     if 'partof' in parsed_template:
         pl = parse_link(parsed_template['partof'])
         if len(pl) == 2:

@@ -21,6 +21,8 @@ def main():
         parse_what_i_know.main()
     pagesList = pagesListIO.getvalue().split('\n')
     for name in pagesList:
+        if Event.select().where(Event.name == name).exists():
+            continue
         page = categoryLister.cachingGetPage(name)
         infoboxData = wikilib.parse_infobox_military_conflict(wikilib.get_infobox(page))
         if name.strip() == '':

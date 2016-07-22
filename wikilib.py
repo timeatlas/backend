@@ -2,6 +2,7 @@ import requests
 import json
 import pprint
 import re
+import os.path
 import wiki_template
 from apiRequest import cachingAPIRequest
 import urllib.parse

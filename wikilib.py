@@ -183,9 +183,8 @@ def parse_infobox_military_conflict(page):
     if 'date' in parsed_template:
         result['date'] = parse_date(parsed_template['date'])
     if 'place' in parsed_template:
-        t = parse_place_template(parsed_template['place'])
-        result['place'] = ', '.join(t)
-        result['place_raw'] = t
+        result['place'] = ', '.join(parse_place_template(parsed_template['place']))
+        result['place_raw'] = parsed_template['place']
     if 'partof' in parsed_template:
         pl = parse_link(parsed_template['partof'])
         if len(pl) == 2:
@@ -203,11 +202,13 @@ def parse_infobox_military_conflict(page):
         result['combatants'] = combatants
     return result
 
+
 def parse_list_template(template):
     res = []
     for s in re.findall(r'\[\[[^\]]+\]\]', template):
         res.append(s[2:len(s)-2])
     return res
+
 
 def parse_infobox_scientist(page):
     # return wiki_template.parse_template(page)['options']
@@ -219,6 +220,7 @@ def parse_infobox_scientist(page):
         'fields'     : parsed_template['fields'],
     }
     return result
+
 
 def get_page_coord(name, placeInfo=''):
     coordsAns = cachingAPIRequest(urllib.parse.urlencode({'action': 'query', 'prop': 'coordinates', 'titles': name, 'format': 'json', 'coprop': 'dim'}))

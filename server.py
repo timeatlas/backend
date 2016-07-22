@@ -4,6 +4,11 @@ from databaseWrap import Event, Coord, Country
 from get_data import get_data
 import json
 
+
+@route('/favicon.ico')
+def get_favicon():
+    return static_file('static/favicon.ico', root='/static')
+
 @route('/countries')
 # title, url, date_start, date_end, lat, lng, place_comment, comment
 def create_response():

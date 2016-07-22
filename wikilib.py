@@ -150,14 +150,14 @@ def parse_combatant_template(template):
     template = template.lower()
     #print(template)
     dashes = r'\u2012\u2013\u2014\u2015-'
-    t = re.search(r'[\{](flag|flagcountry|flagicon|flag icon|flagu|army|navy)\|([\w\s\(\),'+dashes+r']+)[\|\}]', template)
+    t = re.search(r'[\{](flag|flagcountry|flagicon|flag icon|flagu|army|navy|plainlist)\|([\w\s\(\),'+dashes+r']+)[\|\}]', template)
     if t:
         t = t.groups()
         if len(t) > 1:
             return t[1]
     t = re.findall(r'\[([\w\s\(\),\|'+dashes+r']+)\]', template)
     for s in t:
-        print(s)
+        #print(s)
         if 'file:' not in s:
             t2 = re.search(r'\|([\w\s\(\),'+dashes+r']+)', s)
             if t2:
@@ -166,7 +166,7 @@ def parse_combatant_template(template):
             else:
                 return s
 
-    print(t)
+    #print(t)
     return ''
 
 

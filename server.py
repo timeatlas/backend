@@ -1,7 +1,7 @@
 from bottle import *
 from dateConverters import ct, cf
 from databaseWrap import Event, Coord, Country
-from get_data import get_data
+from get_data import get_data, get_coord_data
 import json
 
 
@@ -87,9 +87,14 @@ def create_response():
             country_bool = country_bool | (Country.name == args_lst['country'][i])
         lst = Event.select().join(Country).where(country_bool & (Event.dateStart >= year_start) & (Event.dateStart <= year_end))
     resp = []
-    for ev in lst:
-        resp.append(get_data(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.coordId.lat,
-                                        ev.coordId.lng, ev.coordId.comment, ev.description))
+    if 'only_coord' in args_lst:
+        for ev in lst:
+            resp.append(get_coord_data(ev.coordId.lat,
+                                        ev.coordId.lng, ev.coordId.comment))
+    else:
+        for ev in lst:
+            resp.append(get_data(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.coordId.lat,
+                                            ev.coordId.lng, ev.coordId.comment, ev.description))
     return json.dumps(resp, ensure_ascii=False)
     #return str(dict(request.query))
 

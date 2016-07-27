@@ -76,6 +76,12 @@ def get_data(title, url, date_start, date_end, lat, lng, place_comment, comment)
     }
     return data
 
+def get_coord_data(lat, lng, place_comment):
+    data = {}
+    data['coord'] = {'lat': lat, 'lng': lng,
+                     'comment': place_comment}
+    return data
+
 if __name__ == '__main__':
     for i in range(10):
         pack(json.dumps(get_random_data(), ensure_ascii=False), 'test_'+str(i)+'.json')

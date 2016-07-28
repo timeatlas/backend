@@ -1,7 +1,7 @@
 from bottle import *
 from dateConverters import ct, cf
 from databaseWrap import Event, Coord, Country
-from get_data import get_data, get_coord_data
+from get_data import get_data, get_coord_data, get_info
 import json
 
 
@@ -55,6 +55,21 @@ def create_response():
     else:
         resp = result
     return json.dumps(resp, ensure_ascii=False)
+
+
+@route('/by_coord')
+def desc_by_coord():
+    response.set_header('Access-Control-Allow-Origin', '*')
+    args_lst = dict(request.query)
+    if ('lat' not in args_lst) or ('lng' not in args_lst):
+        return static_file('403.html', root='./static')
+
+    resp = []
+    lst = Event.select().join(Coord).where((Event.coordId == Coord.id) & (Coord.lat == args_lst['lat']) & (Coord.lng == args_lst['lng']))
+    for ev in lst:
+        resp.append(get_info(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.description))
+    return json.dumps(resp, ensure_ascii=False)
+
 
 @route('/')
 # title, url, date_start, date_end, lat, lng, place_comment, comment

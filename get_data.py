@@ -82,6 +82,20 @@ def get_coord_data(lat, lng, place_comment):
                      'comment': place_comment}
     return data
 
+def get_info(title, url, date_start, date_end, comment):
+    data = {}
+    data['period'] = get_period(date_start, date_end)
+    data['title'] = title
+    data['comment'] = comment
+    data['url'] = url
+    data['type'] = 'military conflict'
+    data['data'] = {
+        'sides': '',
+        'winners': [''],
+        'result': ''
+    }
+    return data
+
 if __name__ == '__main__':
     for i in range(10):
         pack(json.dumps(get_random_data(), ensure_ascii=False), 'test_'+str(i)+'.json')

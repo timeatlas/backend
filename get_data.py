@@ -60,8 +60,9 @@ def get_period(date_start, date_end):
     }
 
 
-def get_data(title, url, date_start, date_end, lat, lng, place_comment, comment):
+def get_data(eventId, title, url, date_start, date_end, lat, lng, place_comment, comment):
     data = {}
+    data['eventId'] = eventId
     data['coord'] = {'lat': lat, 'lng': lng,
                      'comment': place_comment}
     data['period'] = get_period(date_start, date_end)
@@ -76,8 +77,9 @@ def get_data(title, url, date_start, date_end, lat, lng, place_comment, comment)
     }
     return data
 
-def get_coord_data(lat, lng, place_comment):
+def get_coord_data(eventId, lat, lng, place_comment):
     data = {}
+    data['eventId'] = eventId
     data['coord'] = {'lat': lat, 'lng': lng,
                      'comment': place_comment}
     return data

@@ -71,6 +71,24 @@ def desc_by_coord():
     return json.dumps(resp, ensure_ascii=False)
 
 
+@route('/by_id')
+def desc_by_coord():
+    response.set_header('Access-Control-Allow-Origin', '*')
+    args_lst = dict(request.query)
+    if 'id' not in args_lst:
+        return static_file('403.html', root='./static')
+
+    resp = []
+    id_lst = args_lst['id'].split(',')
+    id_bool = Event.id == id_lst[0]
+    for i in range(1, len(id_lst)):
+        id_bool = id_bool | (Event.id == id_lst[i])
+    lst = Event.select().where(id_bool)
+    for ev in lst:
+        resp.append(get_info(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.description))
+    return json.dumps(resp, ensure_ascii=False)
+
+
 @route('/')
 # title, url, date_start, date_end, lat, lng, place_comment, comment
 def create_response():
@@ -104,11 +122,11 @@ def create_response():
     resp = []
     if 'only_coord' in args_lst:
         for ev in lst:
-            resp.append(get_coord_data(ev.coordId.lat,
+            resp.append(get_coord_data(ev.id, ev.coordId.lat,
                                         ev.coordId.lng, ev.coordId.comment))
     else:
         for ev in lst:
-            resp.append(get_data(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.coordId.lat,
+            resp.append(get_data(ev.id, ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.coordId.lat,
                                             ev.coordId.lng, ev.coordId.comment, ev.description))
     return json.dumps(resp, ensure_ascii=False)
     #return str(dict(request.query))

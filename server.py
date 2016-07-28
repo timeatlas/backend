@@ -85,7 +85,7 @@ def desc_by_coord():
         id_bool = id_bool | (Event.id == id_lst[i])
     lst = Event.select().where(id_bool)
     for ev in lst:
-        resp.append(get_info(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.description))
+        resp.append(get_info(ev.id, ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.description))
     return json.dumps(resp, ensure_ascii=False)
 
 

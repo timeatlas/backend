@@ -84,8 +84,9 @@ def get_coord_data(eventId, lat, lng, place_comment):
                      'comment': place_comment}
     return data
 
-def get_info(title, url, date_start, date_end, comment):
+def get_info(eventId, title, url, date_start, date_end, comment):
     data = {}
+    data['eventId'] = eventId
     data['period'] = get_period(date_start, date_end)
     data['title'] = title
     data['comment'] = comment

@@ -67,7 +67,7 @@ def desc_by_coord():
     resp = []
     lst = Event.select().join(Coord).where((Event.coordId == Coord.id) & (Coord.lat == args_lst['lat']) & (Coord.lng == args_lst['lng']))
     for ev in lst:
-        resp.append(get_info(ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.description))
+        resp.append(get_info(ev.id, ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.description))
     return json.dumps(resp, ensure_ascii=False)
 
 

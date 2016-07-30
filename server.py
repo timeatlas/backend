@@ -4,6 +4,10 @@ from databaseWrap import Event, Coord, Country
 from get_data import get_data, get_coord_data, get_info
 import json
 
+# Set header which allows CORS. It doesn't apply header to error page (at least to 500 error; don't know why)
+@hook('after_request')
+def enable_cors():
+    response.set_header('Access-Control-Allow-Origin', '*')
 
 @route('/favicon.ico')
 def get_favicon():
@@ -17,6 +21,10 @@ def serve_static(filepath):
 def error404(error):
     return static_file('404.html', root='./static')
 
+@error(500)
+def error500(error):
+    response.set_header('Access-Control-Allow-Origin', '*')
+
 @error(403)
 def error403(error):
     return static_file('403.html', root='./static')
@@ -24,7 +32,6 @@ def error403(error):
 @route('/countries')
 # title, url, date_start, date_end, lat, lng, place_comment, comment
 def create_response():
-    response.set_header('Access-Control-Allow-Origin', '*')
     args_lst = dict(request.query)
     resp = []
     lst = None
@@ -59,7 +66,6 @@ def create_response():
 
 @route('/by_coord')
 def desc_by_coord():
-    response.set_header('Access-Control-Allow-Origin', '*')
     args_lst = dict(request.query)
     if ('lat' not in args_lst) or ('lng' not in args_lst):
         return static_file('403.html', root='./static')
@@ -73,7 +79,6 @@ def desc_by_coord():
 
 @route('/by_id')
 def desc_by_coord():
-    response.set_header('Access-Control-Allow-Origin', '*')
     args_lst = dict(request.query)
     if 'id' not in args_lst:
         return static_file('403.html', root='./static')
@@ -92,7 +97,6 @@ def desc_by_coord():
 @route('/')
 # title, url, date_start, date_end, lat, lng, place_comment, comment
 def create_response():
-    response.set_header('Access-Control-Allow-Origin', '*')
     args_lst = dict(request.query)
     year_start = None
     year_end = None

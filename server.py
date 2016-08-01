@@ -43,6 +43,9 @@ def create_response():
     else:
         # Country.select().join(Event).where((Country.eventId == Event.id) &
         lst = Country.select()
+
+    print('Query:', lst, file = sys.stderr)
+
     for country in lst:
         resp.append(country.name)
     result = {}
@@ -72,6 +75,9 @@ def desc_by_coord():
 
     resp = []
     lst = Event.select().join(Coord).where((Event.coordId == Coord.id) & (Coord.lat == args_lst['lat']) & (Coord.lng == args_lst['lng']))
+
+    print('Query:', lst, file = sys.stderr)
+
     for ev in lst:
         resp.append(get_info(ev.id, ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.description))
     return json.dumps(resp, ensure_ascii=False)
@@ -85,10 +91,10 @@ def desc_by_coord():
 
     resp = []
     id_lst = args_lst['id'].split(',')
-    id_bool = Event.id == id_lst[0]
-    for i in range(1, len(id_lst)):
-        id_bool = id_bool | (Event.id == id_lst[i])
-    lst = Event.select().where(id_bool)
+    lst = Event.select().where(Event.id << id_lst)
+
+    print('Query:', lst, file = sys.stderr)
+
     for ev in lst:
         resp.append(get_info(ev.id, ev.name, ev.url, cf(ev.dateStart), cf(ev.dateEnd), ev.description))
     return json.dumps(resp, ensure_ascii=False)
@@ -124,6 +130,9 @@ def create_response():
             country_bool = country_bool | (Country.name == args_lst['country'][i])
         lst = Event.select().join(Country).where(country_bool & (Event.dateStart >= year_start) & (Event.dateStart <= year_end))
     resp = []
+
+    print('Query:', lst, file = sys.stderr)
+
     if 'only_coord' in args_lst:
         for ev in lst:
             resp.append(get_coord_data(ev.id, ev.coordId.lat,
